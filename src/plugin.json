@@ -1,0 +1,39 @@
+{
+  "$schema": "https://raw.githubusercontent.com/grafana/grafana/master/docs/sources/developers/plugins/plugin.schema.json",
+  "type": "datasource",
+  "name": "AVEVA Edge Data Store (SAMPLE)",
+  "id": "aveva-eds-datasource",
+  "metrics": true,
+  "info": {
+    "description": "Simple Edge Data Store datasource plugin sample",
+    "author": {
+      "name": "AVEVA Group plc",
+      "url": "https://aveva.com"
+    },
+    "keywords": ["aveva", "data", "EDS", "edge"],
+    "logos": {
+      "small": "img/logo.svg",
+      "large": "img/logo.svg"
+    },
+    "links": [
+      {
+        "name": "GitHub",
+        "url": "https://github.com/AVEVA/sample-eds-grafana_plugin-datasource"
+      },
+      {
+        "name": "Apache-2 License",
+        "url": "https://github.com/AVEVA/sample-eds-grafana_plugin-datasource/LICENSE"
+      }
+    ],
+    "screenshots": [
+      { "name": "Edge Data Store Configuration", "path": "img/EDSConfig.png" },
+      { "name": "Example Data Query", "path": "img/DataQuery.png" }
+    ],
+    "version": "1.0.0",
+    "updated": "%TODAY%"
+  },
+  "dependencies": {
+    "grafanaDependency": ">=7.0.0",
+    "plugins": []
+  }
+}
