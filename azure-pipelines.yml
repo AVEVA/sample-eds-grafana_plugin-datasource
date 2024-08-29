@@ -29,15 +29,16 @@ resources:
       endpoint: AVEVA
 
 variables:
+  - template: '/miscellaneous/build_templates/variables.yml@templates'
   - name: analysisProject
-    value: REPLACE_WITH_SAMPLE_NAME #TODO Replace placeholder.
+    value: sample-eds-grafana_plugin-datasource
 
 parameters:
   - name: pool
     default: DevOps Managed Containers Build
   - name: containerDemands
     type: object
-    default: ['Agent.OS -equals Linux'] #TODO Check container demands.
+    default: ['Agent.OS -equals Windows_NT']
 
 jobs:
   - job: Tests
@@ -46,15 +47,25 @@ jobs:
       name: ${{ parameters.pool }}
       demands: ${{ parameters.containerDemands }}
     steps:
-      - template: '/miscellaneous/build_templates/appsettings.yml@templates'
-        parameters:
-          secrets: 'TenantId, NamespaceId, CommunityId, ClientId, ClientSecret, Resource'
+      - task: GoTool@0
+        displayName: 'Install Go'
+        inputs:
+            version: '$(go-version)'
+      
+      - script: npm ci
+        displayName: 'Install dependencies'
 
-      #TODO Add steps to run sample tests.
+      - script: npm test
+        displayName: 'Run TS tests'
 
-  #TODO Static code analysis should be run by any sample that can.
-  #If the language your sample is written in not supported by polaris and blackduck, you may remove this job and OpsGuildAutomationRepo repository above.
-  #Example: Power Query is not supported so those samples do not have a code analysis step.
+      - task: PublishTestResults@2
+        inputs:
+          testResultsFormat: JUnit
+          testResultsFiles: '*.xml'
+          failTaskOnFailedTests: true
+          searchFolder: '$(Build.SourcesDirectory)/coverage'
+          testRunTitle: '$(Agent.JobName) on $(Agent.OS)'
+        displayName: 'Publish test results'
+        condition: always()
+      
   - template: '/miscellaneous/build_templates/code-analysis.yml@templates'
-    parameters:
-      useRequirementsTxt: true
